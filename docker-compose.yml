@@ -1,0 +1,20 @@
+services:
+  museum-cert:
+    build: .
+    image: museum-temp-cert:latest
+    container_name: museum-temp-cert
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_PATH: /data/museum.db
+    volumes:
+      - museum-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  museum-data:
